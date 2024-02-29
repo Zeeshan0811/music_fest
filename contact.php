@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,8 +15,11 @@
 
     <!-- Custom styles for this template -->
     <link href="./assets/library/croppie/croppie.css" rel="stylesheet">
-    <link href="./assets/css/style.css" rel="stylesheet">
-
+    <style>
+        canvas {
+            border: 1px solid grey;
+        }
+    </style>
 </head>
 
 <body>
@@ -70,10 +73,10 @@
                     <h4 class="my-0 font-weight-normal">Crop</h4>
                 </div>
                 <div class="card-body">
-                    <img id="my-image" src="#" />
+                    <div id="my-image"></div>
                 </div>
                 <div class="card-footer">
-                    <button id="use">Set</button>
+                    <button id="use" class="btn btn-primary">Set</button>
                 </div>
             </div>
             <div class="card mb-4 box-shadow">
@@ -81,68 +84,18 @@
                     <h4 class="my-0 font-weight-normal">Result</h4>
                 </div>
                 <div class="card-body">
-                    <canvas id="myCanvas" width="240" height="297" style="border:1px solid grey;"></canvas>
-                    <!-- <canvas id="hidden_canvas" width="240" height="297" style="border:1px solid grey;"></canvas> -->
-                    <!-- <img id="result" src="">
-                    <a id="download_image_a" href="/" download="myimage">Download >></a> -->
+                    <canvas id="myCanvas" width="240" height="297"></canvas>
                 </div>
                 <div class="card-footer">
-                    <button type="button" onClick="download()">Download</button>
-                    <!-- <a id="download_image_a" href="/" download="myimage">Download >></a> -->
-                    <!-- <a id="download_image" href="/" download="myimage">Download >></a> -->
+                    <button type="button" onClick="download()" class="btn btn-primary">Download</button>
                 </div>
             </div>
         </div>
-
-        <!-- <img id="scream" width="220" height="277" src="https://www.w3schools.com/graphics/pic_the_scream.jpg" alt="The Scream"> -->
-        <!-- <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <img class="mb-2" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
-                    <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Features</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Cool stuff</a></li>
-                        <li><a class="text-muted" href="#">Random feature</a></li>
-                        <li><a class="text-muted" href="#">Team feature</a></li>
-                        <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                        <li><a class="text-muted" href="#">Another one</a></li>
-                        <li><a class="text-muted" href="#">Last time</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Resources</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Resource</a></li>
-                        <li><a class="text-muted" href="#">Resource name</a></li>
-                        <li><a class="text-muted" href="#">Another resource</a></li>
-                        <li><a class="text-muted" href="#">Final resource</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>About</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Team</a></li>
-                        <li><a class="text-muted" href="#">Locations</a></li>
-                        <li><a class="text-muted" href="#">Privacy</a></li>
-                        <li><a class="text-muted" href="#">Terms</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer> -->
     </div>
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-     -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
@@ -151,12 +104,11 @@
     <script>
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
+        let backgroundImage = new Image();
+        let topImage = new Image();
+
         $(document).ready(function() {
             console.log("ready!");
-            // canvas_initiate("image");
-
-
-
 
             // Initialize Croppie once
             var resize = new Croppie($('#my-image')[0], {
@@ -180,19 +132,25 @@
                     }, {
                         name: 'myimgage.jpg'
                     }];
-                    // $('#result').attr('src', dataImg);
-                    // $('#download_image_a').attr('href', dataImg);
-                    canvas_initiate(dataImg);
+                    // Clear the canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Draw the background image again
+                    backgroundImage.src = './assets/templete/Influencer-Template.png';
+                    // When both images are loaded, draw them onto the canvas
+                    backgroundImage.onload = function() {
+                        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                    }
+
+
+                    // Draw the top image
+                    topImage.src = dataImg;
+                    canvas_initiate(dataImg)
                 });
             });
 
             $("#imgInp").change(function() {
                 readURL(this, resize);
             });
-
-
-
-
         });
 
         function readURL(input, croppieInstance) {
@@ -212,21 +170,7 @@
         // Starting Canvas
         function canvas_initiate(user_image) {
 
-            // Create two image objects
-            var backgroundImage = new Image();
-            var topImage = new Image();
-
-            // Load the images
-            backgroundImage.src = './assets/templete/Influencer-Template.png';
             topImage.src = user_image;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // When both images are loaded, draw them onto the canvas
-            backgroundImage.onload = function() {
-                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-
-            }
 
             topImage.onload = function() {
                 // Calculate the position to center the top image
@@ -234,19 +178,11 @@
                 var y = (canvas.height - topImage.height) / 2;
 
                 ctx.drawImage(topImage, x, y); // Draw the top image in the center
-
             }
         }
 
         function download() {
             let canvasImage = document.getElementById('myCanvas').toDataURL('image/png');
-            // var canvas = document.createElement('hidden_canvas');
-            // var context = canvas.getContext('2d');
-            // canvas.width = 1400;
-            // canvas.height = 1800;
-
-            // let canvasImage = canvas.toDataURL('image/png');
-
             // this can be used to download any image from webpage to local disk
             let xhr = new XMLHttpRequest();
             xhr.responseType = 'blob';
@@ -261,7 +197,6 @@
             };
             xhr.open('GET', canvasImage); // This is to download the canvas Image
             xhr.send();
-
         }
     </script>
 
