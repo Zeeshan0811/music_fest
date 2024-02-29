@@ -4,13 +4,13 @@ if ($_FILES["file"]["error"] == UPLOAD_ERR_OK && is_uploaded_file($_FILES["file"
     $file_tmp = $_FILES["file"]["tmp_name"];
 
     // Specify the directory where you want to store the uploaded file
-    $upload_dir = "uploads/user/";
+    $upload_dir = "./uploads/user/";
 
     // Move the uploaded file to the specified directory
     if (move_uploaded_file($file_tmp, $upload_dir . $file_name)) {
         echo "File uploaded successfully.";
     } else {
-        echo "Error uploading file.";
+        echo "Not uploaded because of error #" . $_FILES["file"]["error"];
     }
 } else {
     echo "Error: No file uploaded or an error occurred during upload.";
