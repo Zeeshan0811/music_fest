@@ -2,6 +2,10 @@ html {
     font-size: 14px;
 }
 
+body {
+    background-image: url("../templete/BG.png");
+}
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -33,6 +37,38 @@ html {
 }
 
 #my-image,
-#use {
+#use,
+#btn_download {
     display: none;
 }
+
+
+
+/* Canvas */
+#myCanvas {
+    width: 400px;
+    height: 500px;
+}
+
+@media only screen and (max-width: 600px) {
+    #myCanvas {
+        width: 200px;
+        height: 250px;
+    }
+}
+
+/* .canvas_container {
+    width: 400px;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+}
+
+#myCanvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+} */

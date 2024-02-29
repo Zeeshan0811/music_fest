@@ -81,8 +81,9 @@
                     <h4 class="my-0 font-weight-normal">Result</h4>
                 </div>
                 <div class="card-body">
-                    <canvas id="myCanvas" width="240" height="297" style="border:1px solid grey;"></canvas>
-                    <!-- <canvas id="hidden_canvas" width="240" height="297" style="border:1px solid grey;"></canvas> -->
+                    <canvas id="myCanvas" width="1440" height="1800" style="border:1px solid grey;"></canvas>
+
+                    <!-- <canvas id="myCanvas" width="240" height="297" style="border:1px solid grey;"></canvas> -->
                     <!-- <img id="result" src="">
                     <a id="download_image_a" href="/" download="myimage">Download >></a> -->
                 </div>
@@ -92,6 +93,11 @@
                     <!-- <a id="download_image" href="/" download="myimage">Download >></a> -->
                 </div>
             </div>
+        </div>
+
+        <div class="d-none">
+            <img src="" id="templete_background" alt="">
+            <img src="" id="uploaded_croped_image" alt="">
         </div>
 
         <!-- <img id="scream" width="220" height="277" src="https://www.w3schools.com/graphics/pic_the_scream.jpg" alt="The Scream"> -->
@@ -135,14 +141,6 @@
     </div>
 
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-     -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
@@ -151,38 +149,66 @@
     <script>
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
+        // ctx.width = 1440; // actual size given with integer values
+        // ctx.height = 1800;
+
+        // ctx.style.width = '400px'; // show at 50% on screen
+        // ctx.style.height = '50px';
+
+
+        var backgroundImage = new Image();
+        var topImage = new Image();
+        // Load the images
+        backgroundImage.src = './assets/templete/Influencer-Template.png';
+        backgroundImage.onload = function() {
+            $('#templete_background').attr('src', backgroundImage);
+        }
+
+
+
         $(document).ready(function() {
             console.log("ready!");
             // canvas_initiate("image");
-
-
-
-
             // Initialize Croppie once
             var resize = new Croppie($('#my-image')[0], {
                 viewport: {
+                    // width: 1252,
+                    // height: 1681,
                     width: 200,
                     height: 250,
                     type: 'square'
                 },
                 boundary: {
-                    width: 300,
-                    height: 300
+                    // width: 300,
+                    height: 450
                 },
-                enableOrientation: true
+                enableZoomboolean: true,
+                enableOrientation: true,
+                quality: 1
             });
 
             $('#use').on('click', function() {
                 // Get cropped image and handle it
-                resize.result('base64').then(function(dataImg) {
+                resize.result(
+                    // 'base64'
+                    {
+                        type: 'base64',
+                        size: {
+                            width: 1252,
+                            height: 1681,
+                        },
+                        format: 'png',
+                    }
+
+                ).then(function(dataImg) {
                     var data = [{
                         image: dataImg
                     }, {
                         name: 'myimgage.jpg'
                     }];
-                    // $('#result').attr('src', dataImg);
+                    $('#uploaded_croped_image').attr('src', dataImg);
                     // $('#download_image_a').attr('href', dataImg);
-                    canvas_initiate(dataImg);
+                    canvas_initiate();
                 });
             });
 
@@ -210,36 +236,32 @@
         }
 
         // Starting Canvas
-        function canvas_initiate(user_image) {
+        function canvas_initiate() {
+            // clearCanvas(ctx);
 
             // Create two image objects
-            var backgroundImage = new Image();
-            var topImage = new Image();
-
-            // Load the images
-            backgroundImage.src = './assets/templete/Influencer-Template.png';
-            topImage.src = user_image;
+            topImage.src = $('#uploaded_croped_image').attr('src');
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // When both images are loaded, draw them onto the canvas
-            backgroundImage.onload = function() {
-                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            // backgroundImage.onload = function() {
 
 
-            }
+            // }
 
             topImage.onload = function() {
                 // Calculate the position to center the top image
                 var x = (canvas.width - topImage.width) / 2;
                 var y = (canvas.height - topImage.height) / 2;
 
-                ctx.drawImage(topImage, x, y); // Draw the top image in the center
+                ctx.drawImage(topImage, x, y - 10); // Draw the top image in the center
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
             }
         }
 
         function download() {
-            let canvasImage = document.getElementById('myCanvas').toDataURL('image/png');
+            let canvasImage = document.getElementById('myCanvas').toDataURL('image/png', 1.0);
             // var canvas = document.createElement('hidden_canvas');
             // var context = canvas.getContext('2d');
             // canvas.width = 1400;
@@ -262,6 +284,16 @@
             xhr.open('GET', canvasImage); // This is to download the canvas Image
             xhr.send();
 
+        }
+
+        function clearCanvas(ctx) {
+            ctx.save();
+            ctx.globalCompositeOperation = 'copy';
+            ctx.strokeStyle = 'transparent';
+            ctx.beginPath();
+            ctx.lineTo(0, 0);
+            ctx.stroke();
+            ctx.restore();
         }
     </script>
 
