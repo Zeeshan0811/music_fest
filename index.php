@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico" />
+    <link rel="icon" href="./assets/images/Mnemonic.png" />
     <meta name="theme-color" content="#563d7c">
-    <title>Event Spark</title>
+    <title>Spark 20 - Music Fest | Techno </title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" crossorigin="anonymous" />
@@ -25,12 +25,20 @@
         <!-- <h1 class="display-4">Tecno Music Fest</h1> -->
         <!-- <p class="lead">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It's built with default Bootstrap components and utilities with little customization.</p> -->
     </div>
+    <!-- <div>Click the upload icon below to upload a file.</div>
+    <div class="image-upload">
+        <label for="file-input">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Download-Icon.png/800px-Download-Icon.png" />
+        </label>
 
+        <input id="file-input" type="file" />
+    </div>
+     -->
     <div class="container-fluid">
         <div class="card-deck mb-3 text-center ml-2 mr-2">
             <div class="card mb-4 box-shadow bg-dark text-white">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Upload Image</h4>
+                    <h4 class="my-0 font-weight-bold">UPLOAD</h4>
                 </div>
                 <div class="card-body mt-5 text-center">
                     <div class="form-group">
@@ -40,7 +48,7 @@
             </div>
             <div class="card mb-4 box-shadow bg-dark text-white">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Crop</h4>
+                    <h4 class="my-0 font-weight-bold">CROP</h4>
                 </div>
                 <div class="card-body">
                     <img id="my-image" src="#" />
@@ -51,7 +59,7 @@
             </div>
             <div class="card mb-4 box-shadow bg-dark text-white">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Result</h4>
+                    <h4 class="my-0 font-weight-bold">RESULT</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="myCanvas" width="1440" height="1800" style="border: 1px solid grey"></canvas>
@@ -138,6 +146,11 @@
 
             $("#imgInp").change(function() {
                 readURL(this, resize);
+                upload_image('imgInp');
+            });
+
+            $("#imgCap").change(function() {
+                readURL(this, resize);
             });
 
 
@@ -218,6 +231,27 @@
             ctx.lineTo(0, 0);
             ctx.stroke();
             ctx.restore();
+        }
+
+        function upload_image(component_id) {
+            var fileInput = document.getElementById(component_id);
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: './upload_file.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
         }
     </script>
 </body>
